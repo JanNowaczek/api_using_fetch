@@ -14,7 +14,7 @@ class App {
   }
 
   loadUsers() {
-    if(this.isLoading) return
+    if (this.isLoading) return
 
     this.isLoading = true
     this.isError = false
@@ -30,7 +30,7 @@ class App {
       .then(data => {
         this.users = data.results
         console.log(this)
-        
+
       })
       .catch(() => this.isError = true)
       .finally(() => {
@@ -42,7 +42,14 @@ class App {
   render() {
     this.container.innerHTML = ''
 
+    this.renderForm()
+
+    this.renderContent()
+  }
+
+  renderForm() {
     const formsDiv = document.createElement('div')
+    formsDiv.className = 'container form-container'
 
     const numberInput = this.renderInput('number', 'numberOfUsers')
     const textInput = this.renderInput('text', 'genderOfUsers')
@@ -54,18 +61,26 @@ class App {
 
     this.container.appendChild(formsDiv)
 
-    this.renderContent()
+    if (this.focusedElement === 'numberOfUsers') numberInput.focus()
+    if (this.focusedElement === 'genderOfUsers') textInput.focus()
   }
 
-  renderContent(){
+  renderContent() {
     const renderUser = (user) => {
       const userDiv = document.createElement('div')
-
+      
       const avatarDiv = document.createElement('div')
       const avatar = document.createElement('img')
       const dataDiv = document.createElement('div')
       const nameDiv = document.createElement('div')
       const emailDiv = document.createElement('div')
+
+      userDiv.className = 'user__container'
+      avatarDiv.className = 'user__avatar-container'
+      avatar.className = 'user__avatar'
+      dataDiv.className = 'user__data-container'
+      nameDiv.className = 'user__name'
+      emailDiv.className = 'user__email'
 
       nameDiv.innerText = `${user.name.first} ${user.name.last}`
       emailDiv.innerText = user.email
@@ -88,29 +103,30 @@ class App {
       this.users.forEach(
         user => usersContainerDiv.appendChild(renderUser(user))
       )
-      
+
       return usersContainerDiv
     }
 
     const getContent = () => {
-      if(this.isError){
+      if (this.isError) {
         return document.createTextNode('Wystąpił błąd! Spróbuj ponownie.')
       }
-      if(this.isLoading){
+      if (this.isLoading) {
         return document.createTextNode('Ładuje...')
       }
-      if(this.users === null){
+      if (this.users === null) {
         return document.createTextNode('Kliknij przycisk żeby załadować')
       }
-      if(this.users && this.users.length === 0){
+      if (this.users && this.users.length === 0) {
         return document.createTextNode('Nie ma żadnych użytkowników!')
       }
-      if(this.users){
+      if (this.users) {
         return renderUsers()
       }
     }
 
     const div = document.createElement('div')
+    div.className = 'container content-container'
 
     div.appendChild(getContent())
 
@@ -119,6 +135,7 @@ class App {
 
   renderButton(label, onClick) {
     const button = document.createElement('button')
+    button.className = 'button'
 
     button.innerText = label
 
@@ -132,6 +149,7 @@ class App {
 
   renderInput(type, propName) {
     const input = document.createElement('input')
+    input.className = 'input'
 
     input.setAttribute('type', type)
     input.value = this[propName]
@@ -146,7 +164,5 @@ class App {
     )
 
     return input
-
-    if (this.focusedElement === propName) input.focus()
   }
 }

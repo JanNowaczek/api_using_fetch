@@ -1,0 +1,52 @@
+.container {
+    text-align: center;
+    font-family: sans-serif;
+    padding: 20px;
+    margin: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    box-shadow: 3px 3px 10px 0px rgba(0, 0, 0, 0.1)
+  }
+  
+  .button {
+    margin: 10px;
+    padding: 0px 10px;
+    height: 25px;
+    border-radius: 2px;
+    background: none;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    transition: .3s ease-in-out;
+  }
+  .button:hover {
+    background-color: rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+  }
+  
+  .input{
+    margin: 10px;
+    padding-left: 5px;
+    height: 21px;
+    border-radius: 2px;
+    background: none;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+  }
+  
+  .user__container{
+    display: flex;
+    margin: 20px 0px;
+  }
+  .user__avatar-container{
+    margin: 0 20px;
+  }
+  .user__avatar{
+    border-radius: 50%;
+  }
+  .user__data-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+  }
+  .user__name{
+    text-transform: capitalize;
+  }
