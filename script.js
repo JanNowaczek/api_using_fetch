@@ -2,8 +2,8 @@ class App {
   constructor(selector) {
     this.container = document.querySelector(selector) || document.body
 
-    this.numberOfUsers = 5
-    this.genderOfUsers = 'male' 
+    this.numberOfUsers = 10
+    this.genderOfUsers = 'male' // this means both
     this.searchTerm = ''
     this.focusedElement = null
     this.users = null
@@ -42,30 +42,55 @@ class App {
   render() {
     this.container.innerHTML = ''
 
-    this.renderInput('number', 'numberOfUsers')
-    this.renderInput('text', 'genderOfUsers')
-    this.renderButton('Załaduj', this.loadUsers.bind(this))
+    const formsDiv = document.createElement('div')
+
+    const numberInput = this.renderInput('number', 'numberOfUsers')
+    const textInput = this.renderInput('text', 'genderOfUsers')
+    const loadButton = this.renderButton('Załaduj', this.loadUsers.bind(this))
+
+    formsDiv.appendChild(numberInput)
+    formsDiv.appendChild(textInput)
+    formsDiv.appendChild(loadButton)
+
+    this.container.appendChild(formsDiv)
 
     this.renderContent()
   }
 
   renderContent(){
-    const renderUsers = () =>{
+    const renderUser = (user) => {
+      const userDiv = document.createElement('div')
+
+      const avatarDiv = document.createElement('div')
+      const avatar = document.createElement('img')
+      const dataDiv = document.createElement('div')
+      const nameDiv = document.createElement('div')
+      const emailDiv = document.createElement('div')
+
+      nameDiv.innerText = `${user.name.first} ${user.name.last}`
+      emailDiv.innerText = user.email
+      avatar.setAttribute('src', user.picture.thumbnail)
+
+      avatarDiv.appendChild(avatar)
+
+      dataDiv.appendChild(nameDiv)
+      dataDiv.appendChild(emailDiv)
+
+      userDiv.appendChild(avatarDiv)
+      userDiv.appendChild(dataDiv)
+
+      return userDiv
+    }
+
+    const renderUsers = () => {
       const usersContainerDiv = document.createElement('div')
 
       this.users.forEach(
-        user => {
-          const userDiv = document.createElement('div')
-
-          userDiv.innerText = `${user.name.first} ${user.name.last}`
-
-          usersContainerDiv.appendChild(userDiv)
-        }
+        user => usersContainerDiv.appendChild(renderUser(user))
       )
-
+      
       return usersContainerDiv
     }
-
 
     const getContent = () => {
       if(this.isError){
@@ -102,7 +127,7 @@ class App {
       onClick
     )
 
-    this.container.appendChild(button)
+    return button
   }
 
   renderInput(type, propName) {
@@ -120,7 +145,7 @@ class App {
       }
     )
 
-    this.container.appendChild(input)
+    return input
 
     if (this.focusedElement === propName) input.focus()
   }
