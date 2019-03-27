@@ -1,9 +1,9 @@
 class App {
-  constructor(selector){
+  constructor(selector) {
     this.container = document.querySelector(selector) || document.body
 
-    this.numberOfUsers = 10
-    this.genderOfUsers = 'male'
+    this.numberOfUsers = 5
+    this.genderOfUsers = 'male' 
     this.searchTerm = ''
     this.focusedElement = null
     this.users = null
@@ -13,12 +13,14 @@ class App {
     this.render()
   }
 
-  loadUsers(){
+  loadUsers() {
     if(this.isLoading) return
 
     this.isLoading = true
     this.isError = false
-    
+    this.render()
+
+
     fetch(
       'https://randomuser.me/api' +
       '?results=' + this.numberOfUsers +
@@ -31,21 +33,69 @@ class App {
         
       })
       .catch(() => this.isError = true)
-      .finally(() => this.isLoading = false)
+      .finally(() => {
+        this.isLoading = false
+        this.render()
+      })
   }
 
-  render(){
+  render() {
     this.container.innerHTML = ''
 
     this.renderInput('number', 'numberOfUsers')
     this.renderInput('text', 'genderOfUsers')
-    this.renderButton ('Załaduj', this.loadUsers.bind(this))
+    this.renderButton('Załaduj', this.loadUsers.bind(this))
+
+    this.renderContent()
   }
 
-  renderButton(label, onClick){
+  renderContent(){
+    const renderUsers = () =>{
+      const usersContainerDiv = document.createElement('div')
+
+      this.users.forEach(
+        user => {
+          const userDiv = document.createElement('div')
+
+          userDiv.innerText = `${user.name.first} ${user.name.last}`
+
+          usersContainerDiv.appendChild(userDiv)
+        }
+      )
+
+      return usersContainerDiv
+    }
+
+
+    const getContent = () => {
+      if(this.isError){
+        return document.createTextNode('Wystąpił błąd! Spróbuj ponownie.')
+      }
+      if(this.isLoading){
+        return document.createTextNode('Ładuje...')
+      }
+      if(this.users === null){
+        return document.createTextNode('Kliknij przycisk żeby załadować')
+      }
+      if(this.users && this.users.length === 0){
+        return document.createTextNode('Nie ma żadnych użytkowników!')
+      }
+      if(this.users){
+        return renderUsers()
+      }
+    }
+
+    const div = document.createElement('div')
+
+    div.appendChild(getContent())
+
+    this.container.appendChild(div)
+  }
+
+  renderButton(label, onClick) {
     const button = document.createElement('button')
 
-    button.innerHTML = label
+    button.innerText = label
 
     button.addEventListener(
       'click',
@@ -53,10 +103,9 @@ class App {
     )
 
     this.container.appendChild(button)
-
   }
 
-  renderInput(type, propName){
+  renderInput(type, propName) {
     const input = document.createElement('input')
 
     input.setAttribute('type', type)
@@ -73,7 +122,6 @@ class App {
 
     this.container.appendChild(input)
 
-    if(this.focusedElement === propName) input.focus()
+    if (this.focusedElement === propName) input.focus()
   }
 }
-
